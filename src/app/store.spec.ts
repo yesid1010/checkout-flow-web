@@ -3,6 +3,8 @@ import { store } from './store';
 describe('store', () => {
   it('creates a store with a working dispatch and getState', () => {
     expect(typeof store.dispatch).toBe('function');
-    expect(store.getState()).toEqual({});
+    expect(store.getState()).toEqual({
+      product: { data: null, status: 'idle', error: null },
+    });
   });
 });
