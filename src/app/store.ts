@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-// Placeholder root reducer: replaced by real slices as they land
-// (RTK's configureStore rejects an empty reducer map).
-const noopReducer = (state: Record<string, never> = {}) => state;
+import productReducer from '../features/product/productSlice';
 
 export const store = configureStore({
-  reducer: noopReducer,
+  reducer: {
+    product: productReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
