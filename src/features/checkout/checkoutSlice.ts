@@ -52,7 +52,19 @@ const defaultState: CheckoutState = {
   submitError: null,
 };
 
-const initialState: CheckoutState = loadCheckoutState() ?? defaultState;
+/**
+ * A refresh mid-request leaves a persisted "submitting" state we can never
+ * resolve (the in-flight request is gone) - reset it to idle so the user
+ * isn't stuck looking at a disabled "Procesando..." button forever.
+ */
+export function sanitizeRehydratedState(state: CheckoutState): CheckoutState {
+  if (state.submitStatus === 'submitting') {
+    return { ...state, submitStatus: 'idle', submitError: null };
+  }
+  return state;
+}
+
+const initialState: CheckoutState = sanitizeRehydratedState(loadCheckoutState() ?? defaultState);
 
 export const submitTransaction = createAsyncThunk<
   { transactionId: string; status: TransactionStatus },

@@ -6,6 +6,7 @@ import checkoutReducer, {
   openCheckoutModal,
   refreshTransactionStatus,
   resetCheckout,
+  sanitizeRehydratedState,
   submitCheckoutForm,
   submitTransaction,
   type CheckoutState,
@@ -95,6 +96,24 @@ describe('checkoutSlice reducers', () => {
 
     expect(state).toEqual(initialState);
     expect(localStorage.getItem('checkout-flow-web:checkout')).toBeNull();
+  });
+});
+
+describe('sanitizeRehydratedState', () => {
+  it('resets a stuck "submitting" status to idle and clears the error', () => {
+    const stuck: CheckoutState = { ...initialState, submitStatus: 'submitting', submitError: 'x' };
+
+    expect(sanitizeRehydratedState(stuck)).toEqual({
+      ...initialState,
+      submitStatus: 'idle',
+      submitError: null,
+    });
+  });
+
+  it('leaves any other state untouched', () => {
+    const failed: CheckoutState = { ...initialState, submitStatus: 'failed', submitError: 'boom' };
+
+    expect(sanitizeRehydratedState(failed)).toEqual(failed);
   });
 });
 
