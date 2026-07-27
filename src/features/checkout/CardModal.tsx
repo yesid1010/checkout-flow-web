@@ -3,6 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Button } from '../../components/ui/Button';
 import { detectCardBrand } from '../../lib/cardBrand';
 import { isValidLuhn } from '../../lib/luhn';
+import {
+  digitsAndSpaces,
+  digitsWithOptionalLeadingPlus,
+  onlyDigits,
+} from '../../lib/sanitizeInput';
 import { useBodyScrollLock } from '../../lib/useBodyScrollLock';
 import type { DocumentType } from '../../services/api';
 import { tokenizeCard, WompiError } from '../../services/wompi';
@@ -122,13 +127,21 @@ export function CardModal() {
             Número de documento
             <input
               value={documentNumber}
-              onChange={(e) => setDocumentNumber(e.target.value)}
+              onChange={(e) => setDocumentNumber(onlyDigits(e.target.value))}
+              inputMode="numeric"
+              maxLength={15}
               required
             />
           </label>
           <label>
             Teléfono
-            <input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
+            <input
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(digitsWithOptionalLeadingPlus(e.target.value))}
+              inputMode="tel"
+              maxLength={16}
+              required
+            />
           </label>
 
           <h2>Datos de la tarjeta</h2>
@@ -136,8 +149,9 @@ export function CardModal() {
             Número de tarjeta
             <input
               value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
+              onChange={(e) => setCardNumber(digitsAndSpaces(e.target.value))}
               inputMode="numeric"
+              maxLength={19}
               required
             />
           </label>
@@ -150,7 +164,9 @@ export function CardModal() {
             Mes de expiración
             <input
               value={expMonth}
-              onChange={(e) => setExpMonth(e.target.value)}
+              onChange={(e) => setExpMonth(onlyDigits(e.target.value))}
+              inputMode="numeric"
+              maxLength={2}
               placeholder="MM"
               required
             />
@@ -159,14 +175,22 @@ export function CardModal() {
             Año de expiración
             <input
               value={expYear}
-              onChange={(e) => setExpYear(e.target.value)}
+              onChange={(e) => setExpYear(onlyDigits(e.target.value))}
+              inputMode="numeric"
+              maxLength={2}
               placeholder="AA"
               required
             />
           </label>
           <label>
             CVC
-            <input value={cvc} onChange={(e) => setCvc(e.target.value)} required />
+            <input
+              value={cvc}
+              onChange={(e) => setCvc(onlyDigits(e.target.value))}
+              inputMode="numeric"
+              maxLength={4}
+              required
+            />
           </label>
           <label>
             Cuotas
