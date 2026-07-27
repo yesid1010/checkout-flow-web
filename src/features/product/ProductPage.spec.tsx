@@ -20,6 +20,7 @@ const product = {
   name: 'Wireless Headphones',
   description: 'Noise-cancelling headphones',
   priceInCents: 259900,
+  imageUrl: 'https://tissiniapp.s3.us-east-2.amazonaws.com/img/products/1000x1000/534919_0.jpg',
   stock: 5,
 };
 
@@ -57,6 +58,10 @@ describe('ProductPage', () => {
     expect(screen.getByText('Noise-cancelling headphones')).toBeInTheDocument();
     expect(screen.getByText('5 unidades disponibles')).toBeInTheDocument();
     expect(api.getProduct).toHaveBeenCalledWith('11111111-1111-4111-8111-111111111111');
+
+    const image = screen.getByRole('img', { name: 'Wireless Headphones' });
+    expect(image).toHaveAttribute('src', product.imageUrl);
+    expect(image).toHaveAttribute('loading', 'lazy');
   });
 
   it('shows an error message when loading fails', async () => {

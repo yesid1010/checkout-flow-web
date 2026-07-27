@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Button } from '../../components/ui/Button';
 import { BASE_FEE_IN_CENTS, DELIVERY_FEE_IN_CENTS } from '../../lib/fees';
+import { useBodyScrollLock } from '../../lib/useBodyScrollLock';
 import { resetCheckout, submitTransaction } from './checkoutSlice';
 
 function formatCurrency(cents: number): string {
@@ -17,6 +18,8 @@ export function SummaryBackdrop() {
   const submitStatus = useAppSelector((state) => state.checkout.submitStatus);
   const submitError = useAppSelector((state) => state.checkout.submitError);
   const productAmountInCents = useAppSelector((state) => state.product.data?.priceInCents ?? 0);
+
+  useBodyScrollLock(step === 'SUMMARY');
 
   if (step !== 'SUMMARY') {
     return null;
