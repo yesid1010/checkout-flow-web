@@ -8,4 +8,10 @@ export default defineConfig({
     port: 5180,
     strictPort: true,
   },
+  preview: {
+    // Railway (and similar PaaS) proxy through a generated domain the
+    // preview server doesn't know about by default; Vite's preview host
+    // allowlist would otherwise reject those requests.
+    allowedHosts: true,
+  },
 })
