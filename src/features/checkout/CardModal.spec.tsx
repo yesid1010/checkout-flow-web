@@ -79,6 +79,25 @@ describe('CardModal', () => {
     expect(screen.getByText('visa')).toBeInTheDocument();
   });
 
+  it('strips non-digit characters from document number, card number, and CVC as you type', async () => {
+    const store = buildStore();
+    const user = userEvent.setup();
+
+    render(
+      <Provider store={store}>
+        <CardModal />
+      </Provider>,
+    );
+
+    await user.type(screen.getByLabelText('Número de documento'), 'a1b2c3');
+    await user.type(screen.getByLabelText('Número de tarjeta'), '41a1 11b1');
+    await user.type(screen.getByLabelText('CVC'), '1x2y3z');
+
+    expect(screen.getByLabelText('Número de documento')).toHaveValue('123');
+    expect(screen.getByLabelText('Número de tarjeta')).toHaveValue('411 111');
+    expect(screen.getByLabelText('CVC')).toHaveValue('123');
+  });
+
   it('dispatches closeCheckoutModal when Cancel is clicked', async () => {
     const store = buildStore();
     const user = userEvent.setup();
