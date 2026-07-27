@@ -1,32 +1,68 @@
-# React + TypeScript + Vite
+# checkout-flow-web
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Single-product checkout SPA built with React + TypeScript + Redux Toolkit, mobile-first (iPhone SE reference viewport). Talks to [checkout-flow-api](https://github.com/yesid1010/checkout-flow-api) and tokenizes cards directly against [Wompi](https://wompi.co) (Sandbox) with the public key.
 
-Currently, two official plugins are available:
+Backend repo: [checkout-flow-api](https://github.com/yesid1010/checkout-flow-api)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Live deploy
 
-## React Compiler
+- App: _TBD_
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Screens
 
-## Expanding the Oxlint configuration
+1. **Product** — description, price, stock, "Pagar con tarjeta".
+2. **Card + delivery modal** — customer, card (Luhn check + Visa/Mastercard brand detection), delivery data. On submit, the card is tokenized directly against Wompi; only the resulting token is stored, never the raw card number.
+3. **Summary backdrop** — product amount + base fee + delivery fee = total, "Pagar" triggers the actual charge against the backend.
+4. **Status** — final result (approved / declined / error), re-checks automatically if still pending.
+5. Back to product, which re-fetches to show updated stock.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Progress (current step, customer/delivery data, card token, transaction result) persists to `localStorage`, so a page refresh at any point resumes exactly where the user left off.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Architecture
+
+```
+src/
+├── app/            store.ts, hooks.ts (typed useAppDispatch/useAppSelector)
+├── features/
+│   ├── product/     ProductPage, productSlice
+│   └── checkout/     CardModal, SummaryBackdrop, StatusPage, checkoutSlice, persist.ts
+├── components/ui/   Button
+├── services/        api.ts (checkout-flow-api client), wompi.ts (direct Wompi tokenization)
+├── lib/             luhn.ts, cardBrand.ts, fees.ts, useBodyScrollLock.ts
+└── config/env.ts    Vite env vars (import.meta.env), isolated for Jest compatibility
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Redux Toolkit slices, `createAsyncThunk` for all async flows. No component talks to `fetch` directly — everything goes through `services/`.
+
+## Getting started
+
+```bash
+cp .env.example .env.local   # see below
+npm install
+npm run dev
+```
+
+The app runs on `http://localhost:5180` (pinned in `vite.config.ts` to avoid clashing with other local projects on the default 5173). The checkout-flow-api's `FRONTEND_URL` must match it for CORS.
+
+### Environment variables
+
+See [.env.example](.env.example):
+
+- `VITE_API_URL` — checkout-flow-api base URL.
+- `VITE_PRODUCT_ID` — the featured product id (this is a single-product checkout SPA).
+- `VITE_WOMPI_PUBLIC_KEY` / `VITE_WOMPI_BASE_URL` — Wompi Sandbox public key, used only for card tokenization from the browser.
+
+## Testing
+
+```bash
+npm test          # unit + component tests
+npm run test:cov  # with coverage report
+```
+
+Coverage threshold enforced in `jest.config.cjs`: **80%** on branches/functions/lines/statements.
+
+Current results: **100%** on every metric, across every file in `src/`.
+
+## Tech stack
+
+React · TypeScript · Redux Toolkit · Vite · Jest · React Testing Library · Wompi (Sandbox)
