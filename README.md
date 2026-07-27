@@ -6,7 +6,7 @@ Backend repo: [checkout-flow-api](https://github.com/yesid1010/checkout-flow-api
 
 ## Live deploy
 
-- App: _TBD_
+- App: https://checkout-flow-web-production.up.railway.app
 
 ## Screens
 
