@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Button } from '../../components/ui/Button';
 import { detectCardBrand } from '../../lib/cardBrand';
 import { isValidLuhn } from '../../lib/luhn';
+import { useBodyScrollLock } from '../../lib/useBodyScrollLock';
 import type { DocumentType } from '../../services/api';
 import { tokenizeCard, WompiError } from '../../services/wompi';
 import { closeCheckoutModal, submitCheckoutForm } from './checkoutSlice';
@@ -35,6 +36,8 @@ export function CardModal() {
   const [installments, setInstallments] = useState(1);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useBodyScrollLock(step === 'CHECKOUT_MODAL');
 
   if (step !== 'CHECKOUT_MODAL') {
     return null;

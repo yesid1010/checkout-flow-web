@@ -1,3 +1,44 @@
+:root {
+  --color-bg: #f5f6fa;
+  --color-surface: #ffffff;
+  --color-text: #1a1b25;
+  --color-text-muted: #6b7280;
+  --color-border: #e2e4e9;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-contrast: #ffffff;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Mobile-first cap: comfortably fits the iPhone SE (375px) reference
+     viewport with side padding, then widens at the tablet breakpoint. */
+  --max-width: 360px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #111218;
+    --color-surface: #1c1e27;
+    --color-text: #f3f4f6;
+    --color-text-muted: #9ca3af;
+    --color-border: #2d303c;
+    --color-primary: #818cf8;
+    --color-primary-hover: #a5b4fc;
+    --color-primary-contrast: #111218;
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5,8 +46,278 @@
 body {
   margin: 0;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 #root {
   min-height: 100svh;
+}
+
+h1,
+h2 {
+  margin: 0 0 var(--spacing-3);
+  line-height: 1.25;
+}
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.125rem;
+}
+p {
+  margin: 0 0 var(--spacing-3);
+  color: var(--color-text-muted);
+}
+
+/* Product screen */
+.product-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-5) var(--spacing-4);
+}
+
+.product-card {
+  width: 100%;
+  max-width: var(--max-width);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-5);
+}
+
+.product-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-4);
+  background: var(--color-bg);
+}
+
+.product-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.product-stock {
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-4);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.btn--secondary {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.btn--secondary:hover:not(:disabled) {
+  background: var(--color-bg);
+}
+
+/* Modal / backdrop shared by CardModal and SummaryBackdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal {
+  width: 100%;
+  max-width: var(--max-width);
+  max-height: 90svh;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--spacing-5);
+  box-shadow: var(--shadow-md);
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.modal label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.modal input,
+.modal select {
+  min-height: 44px;
+  padding: 0 var(--spacing-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.card-brand {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 2px var(--spacing-2);
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
+}
+.modal-actions .btn {
+  flex: 1;
+}
+
+[role='alert'] {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+[role='status'] {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--spacing-6);
+}
+
+/* Summary screen */
+.summary-list {
+  margin: 0 0 var(--spacing-4);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.summary-row dt {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+.summary-row dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.summary-total {
+  border-bottom: none;
+  padding-top: var(--spacing-3);
+  font-size: 1.125rem;
+}
+.summary-total dt,
+.summary-total dd {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Status screen */
+.status-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: var(--spacing-5) var(--spacing-4);
+}
+
+.status-card {
+  width: 100%;
+  max-width: var(--max-width);
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-6) var(--spacing-5);
+}
+.status-card .btn {
+  margin-top: var(--spacing-4);
+}
+
+.status-card--approved h1 {
+  color: var(--color-success);
+}
+.status-card--declined h1 {
+  color: var(--color-warning);
+}
+.status-card--error h1 {
+  color: var(--color-danger);
+}
+.status-card--pending h1 {
+  color: var(--color-text-muted);
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  :root {
+    --max-width: 420px;
+  }
+
+  .product-page,
+  .status-page {
+    padding: var(--spacing-6);
+  }
+
+  .modal-backdrop {
+    align-items: center;
+  }
+
+  .modal {
+    border-radius: var(--radius-lg);
+  }
 }

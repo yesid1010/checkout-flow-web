@@ -42,6 +42,14 @@ export function ProductPage() {
   return (
     <main className="product-page">
       <article className="product-card">
+        <img
+          className="product-image"
+          src={product.imageUrl}
+          alt={product.name}
+          width={600}
+          height={600}
+          loading="lazy"
+        />
         <h1>{product.name}</h1>
         <p className="product-description">{product.description}</p>
         <p className="product-price">{formatCurrency(product.priceInCents)}</p>
